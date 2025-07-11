@@ -1,13 +1,9 @@
 """
-WSGI config for trucking_project project.
+Alternative entry point for Vercel deployment
 """
-
 import os
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'trucking_project.settings')
 
-application = get_wsgi_application()
-
-# Vercel compatibility - simple export
-app = application
+app = get_wsgi_application()
