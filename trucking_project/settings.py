@@ -70,8 +70,13 @@ TEMPLATES = [
 WSGI_APPLICATION = 'trucking_project.wsgi.application'
 
 
-# No Database needed for this stateless API
-# DATABASES = {}
+# Database configuration - using SQLite for simplicity (stateless)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',  # In-memory database for stateless deployment
+    }
+}
 
 # For stateless API, we disable database entirely
 USE_TZ = True
@@ -138,3 +143,36 @@ if not DEBUG:
 
 # OpenRouteService API Key from environment
 OPENROUTE_API_KEY = os.environ.get('OPENROUTESERVICE_API_KEY', 'your-api-key-here')
+
+# Logging configuration for debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Disable migrations for stateless deployment
+class DisableMigrations:
+    def __contains__(self, item):
+        return True
+    
+    def __getitem__(self, item):
+        return None
+
+if not DEBUG:
+    MIGRATION_MODULES = DisableMigrations()
